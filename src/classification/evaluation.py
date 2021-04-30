@@ -10,32 +10,46 @@ def accuracy(y, y_hat) -> float:
 
 
 def f1(y, y_hat, alpha: float = 0.5, beta: float = 1.):
-    p = precision(y, y_hat)
-    r = recall(y, y_hat)
-    return 2 * p * r / (p + r)
+    p1, p0 = precision(y, y_hat)
+    r1, r0 = recall(y, y_hat)
+    return 2 * p1 * r1 / (p1 + r1), 2 * p0 * r0 / (p0 + r0) 
 #     return (beta**2 + 1) * p * r / (b**2 * p + r)
 
 
 def precision(y, y_hat) -> float:
-    matches = 0
-    total = 0
+    pos_matches = 0
+    pos_total = 0
+    neg_matches = 0
+    neg_total = 0
     for i in range(len(y)):
         if y_hat[i] == 1:
-            total += 1
+            pos_total += 1
             if y[i] == 1:
-                matches += 1
-    return matches / total
+                pos_matches += 1
+        else:
+            neg_total += 1
+            if y[i] == 0:
+                neg_matches += 1
+                
+    return pos_matches / pos_total, neg_matches / neg_total
 
 
 def recall(y, y_hat) -> float:
-    matches = 0
-    total = 0
+    pos_matches = 0
+    total_pos = 0
+    neg_matches = 0
+    total_neg = 0
     for i in range(len(y)):
         if y[i] == 1:
-            total += 1
+            total_pos += 1
             if y_hat[i] == 1:
-                matches += 1
-    return matches / total
+                pos_matches += 1
+        else:
+            total_neg += 1
+            if y_hat[i] == 0:
+                neg_matches += 1
+                
+    return pos_matches / total_pos, neg_matches / total_neg
 
 
 evaluation_functions = dict(accuracy=accuracy, f1=f1, precision=precision, recall=recall)

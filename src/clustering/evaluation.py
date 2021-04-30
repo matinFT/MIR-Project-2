@@ -1,12 +1,23 @@
 import typing as th
 
 
-def purity(y, y_hat) -> float:
-    # todo: for you to implement
-    pass
+def purity(y_pred, y_act):
+    k = int(max(y_pred)) + 1
+    most_classes = np.zeros(k)
+    for purity_class in range(k):
+        class_members = y_act[y_pred == purity_class]
+        most_class = 0
+        most_class_ec = sum(class_members == 0)
+        for j in range(1, 8):
+            temp = sum(class_members == j)
+            if temp > most_class_ec:
+                most_class_ec = temp
+                most_class = j
+        most_classes[purity_class] = most_class_ec
+    return sum(most_classes) / len(y_pred)
 
 
-def adjusted_rand_index(y, y_hat) -> float:
+def adjusted_rand_index(y_pred, y_act):
     # todo: for you to implement
     pass
 
