@@ -19,8 +19,7 @@ class KMeans(TransformerMixin, ClusterMixin, BaseEstimator):
             Y = self.points_new_classes(X, centroids)
             centroids = self.new_centroids(X, Y)
         self.centroids = centroids
-        self.Y = Y
-        return Y
+        self.labels = Y
     
     
     def points_new_classes(self, X, centroids):
@@ -42,6 +41,11 @@ class KMeans(TransformerMixin, ClusterMixin, BaseEstimator):
             class_total[int(Y[i])] += 1
         return np.array([class_sums[i] / class_total[i] for i in range(len(class_total))])
         
-    def predict(self, x):
-        # todo: for you to implement
-        pass
+    def predict(self, X):
+        
+        Y = np.zeros(len(X))
+        for i in range(len(X)):
+            
+            
+            Y[i] = np.argmin([sum((X[i] - centroid) ** 2) for centroid in self.centroids])
+        return Y

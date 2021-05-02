@@ -6,7 +6,7 @@ import numpy as np
 class KNN(BaseEstimator, ClassifierMixin):
     def __init__(
             self,
-            k: int,
+            k = 2,
             # add required hyper-parameters (if any)
     ):
         self.k = k
