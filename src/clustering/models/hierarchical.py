@@ -11,7 +11,7 @@ class Hierarchical(ClusterMixin, BaseEstimator):
             cluster_count,
     ):
         self.cluster_count = cluster_count
-        self.clf = HC_model = AgglomerativeClustering(n_clusters = 2)
+        self.clf = HC_model = AgglomerativeClustering(n_clusters = cluster_count)
 
     def fit_predict(self, X):
         self.clf.fit(np.array([np.array(x) for x in X]))

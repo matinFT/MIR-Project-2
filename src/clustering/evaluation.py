@@ -1,5 +1,6 @@
 import typing as th
 import numpy as np
+from sklearn.metrics.cluster import adjusted_rand_score
 
 def purity(y_pred, y_act):
     k = int(max(y_pred)) + 1
@@ -18,7 +19,7 @@ def purity(y_pred, y_act):
 
 
 def adjusted_rand_index(y_pred, y_act):
-    return 
+    return adjusted_rand_score(np.array([np.array(x) for x in y_pred]), np.array([np.array(x) for x in y_act]))
 
 
 evaluation_functions = dict(purity=purity, adjusted_rand_index=adjusted_rand_index)
