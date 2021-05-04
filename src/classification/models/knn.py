@@ -1,6 +1,8 @@
 import typing as th
 from sklearn.base import BaseEstimator, ClassifierMixin
 import numpy as np
+import time
+from numpy import linalg as LA
 
 
 class KNN(BaseEstimator, ClassifierMixin):
@@ -29,21 +31,7 @@ class KNN(BaseEstimator, ClassifierMixin):
             
         
     def nearest_neighbors_classes(self, x):
-        
-        nearest_neighbors_indices = [i for i in range(self.k)]
-        nearest_neighbors_distances = [sum(np.power(self.X[i] - x, 2)) for i in range(self.k)]
-        for i in range(self.k, len(self.X)):
-            distance = sum(np.power(self.X[i] - x, 2))
-            replace_index = -1
-            for k in range(self.k):
-                if distance < nearest_neighbors_distances[k]:
-                    if replace_index == -1 or distance < nearest_neighbors_distances[replace_index]:
-                        replace_index = k
-                        
-            if replace_index != -1:
-                nearest_neighbors_indices[replace_index] = i
-                nearest_neighbors_distances[replace_index] = distance
-        return [self.Y[i] for i in nearest_neighbors_indices]
-     
-    
+        distances = np.array([LA.norm(a, 2) for a in (self.X - x)])
+        return self.Y[distances.argsort()[:self.k]]
+
                         

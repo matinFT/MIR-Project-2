@@ -1,6 +1,7 @@
 import typing as th
 from sklearn.base import TransformerMixin, ClusterMixin, BaseEstimator
 import numpy as np
+from numpy import linalg as LA
 
 class KMeans(TransformerMixin, ClusterMixin, BaseEstimator):
     def __init__(
@@ -21,31 +22,21 @@ class KMeans(TransformerMixin, ClusterMixin, BaseEstimator):
         self.centroids = centroids
         self.labels = Y
     
-    
     def points_new_classes(self, X, centroids):
         classes = np.zeros(len(X))
-        distances = np.zeros(self.k)
         for i in range(len(X)):
-            x = X[i]
-            for c in range(len(distances)):
-                distances[c] = sum((x - centroids[c]) ** 2)
-            classes[i] = int(np.argmin(distances))
+            classes[i] = int(np.argmin([LA.norm(a) for a in (centroids - X[i])]))
         return classes
     
     def new_centroids(self, X, Y):
-        class_sums = np.zeros([self.k, len(X[0])])
-        class_total = np.zeros(self.k)
-        for i in range(len(X)):
-            
-            class_sums[int(Y[i])] += X[i]
-            class_total[int(Y[i])] += 1
-        return np.array([class_sums[i] / class_total[i] for i in range(len(class_total))])
-        
+        centroids = np.zeros([self.k, len(X[0])])
+        for i in range(self.k):
+            class_members = X[Y == i]
+            centroids[i] = sum(class_members) / len(class_members)
+        return centroids
+
     def predict(self, X):
-        
         Y = np.zeros(len(X))
         for i in range(len(X)):
-            
-            
-            Y[i] = np.argmin([sum((X[i] - centroid) ** 2) for centroid in self.centroids])
+            Y[i] = np.argmin([LA.norm((x), 2) for x in (self.centroids - X[i])])
         return Y
